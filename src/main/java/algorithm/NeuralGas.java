@@ -2,6 +2,7 @@ package algorithm;
 
 import utils.FileHandler;
 import utils.Metric;
+import utils.MyLogger;
 
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,10 @@ public class NeuralGas extends Neural {
 
 	public final String destDir = "results_ng/";
 	public final String destFile = "ng.data";
-	public final String neuronsFile = "neurons.data";
 	public final String imgcprFile = "imgcpr.data";
 	public final int rerolls = 10;
+
+	private MyLogger myLogger;
 
 	public NeuralGas(int neuronsNum, int iterations, String srcFilePath, String separator, boolean normalize,
 			double mapRadiusStart, double learningRateStart, double timeConst) {
@@ -27,6 +29,7 @@ public class NeuralGas extends Neural {
 		this.mapRadiusStart = mapRadiusStart;
 		this.learningRateStart = learningRateStart;
 		this.timeConst = (iterations) / (mapRadiusStart * timeConst);
+		this.myLogger = MyLogger.getInstance();
 
 		FileHandler.makeEmptyDir(destDir);
 		FileHandler.copy(srcFilePath, destDir + destFile);
@@ -46,7 +49,7 @@ public class NeuralGas extends Neural {
 
 		mapRadius = mapRadiusStart * Math.exp(-(double) epoch / timeConst);
 		learningRate = learningRateStart * Math.exp(-(double) epoch / iterations);
-		System.out.println("Map radius: " + mapRadius + "\t" + "Learning rate: " + learningRate);
+		myLogger.info("Map radius: " + mapRadius + "\t" + "Learning rate: " + learningRate);
 
 		Map<Double, List<Double>> map = new TreeMap<Double, List<Double>>();
 		for (int i = 0; i < neurons.size(); i++) {
@@ -67,10 +70,9 @@ public class NeuralGas extends Neural {
 
 	public void calc() {
 		for (int i = 0; i < iterations; i++) {
+			myLogger.info("--------------------------------------\n" + "Iteration: " + (i+1));
 			calcWinnersIds();
 			learn(i);
-
-			System.out.println("Iteration: " + i);
 		}
 
 		FileHandler.writePointsAsClusters(winnerIds, neurons, destDir + imgcprFile, separator);

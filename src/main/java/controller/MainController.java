@@ -4,14 +4,18 @@ import algorithm.AlgorithmType;
 import algorithm.NeuralGas;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utils.FileHandler;
+import utils.MyLogger;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MainController {
+public class MainController implements Initializable {
     @FXML
     private Button startBtn;
 
@@ -55,9 +59,12 @@ public class MainController {
     private double mapRadius = 50.0;
     private static final double PRECISION = 100.0;
     private static final String SEPARATOR = "\t";
+    private MyLogger myLogger;
 
 
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        myLogger = MyLogger.getInstance().textArea(logsArea);
         initAlgorithmCombobox();
         initSliders();
         initButtons();
@@ -73,20 +80,22 @@ public class MainController {
 
             FileHandler.parseIMG(imageFile, imageData, SEPARATOR, frameSz);
 
-            NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
-            ng.calc();
+            new Thread(() -> {
+                NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
+                ng.calc();
 
-            FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.destDir + ng.imgcprFile, SEPARATOR),
-                    imageFile, ng.destDir+"out.png", SEPARATOR, frameSz, "png");
+                FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.destDir + ng.imgcprFile, SEPARATOR),
+                        imageFile, ng.destDir+"out.png", SEPARATOR, frameSz, "png");
 
-            setImage(ng.destDir + "out.png");
+                setImage(ng.destDir + "out.png");
+            }).start();
         });
     }
 
     private void initAlgorithmCombobox() {
         AlgorithmType[] functionTypes = AlgorithmType.values();
         algorithmComboBox.setItems(FXCollections.observableArrayList(functionTypes));
-        algorithmComboBox.setValue(AlgorithmType.NEURAL_GAS);
+        algorithmComboBox.setValue(AlgorithmType.NEURAL_GAS.getName());
         algorithmComboBox.valueProperty().addListener(
                 (observable, oldValue, actualValue) -> algorithmType = (AlgorithmType) actualValue);
     }
