@@ -1,6 +1,7 @@
 package controller;
 
 import algorithm.AlgorithmType;
+import algorithm.Kohonen;
 import algorithm.NeuralGas;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.StringConverter;
 import utils.FileHandler;
 import utils.MyLogger;
 
@@ -93,16 +95,28 @@ public class MainController implements Initializable {
             FileHandler.parseIMG(imageFile.toString(), imageData, SEPARATOR, frameSz);
 
             new Thread(() -> {
-                NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
-                ng.calc();
+                if (algorithmType.equals(AlgorithmType.NEURAL_GAS)) {
+                    NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
+                    ng.calc();
 
-                FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.getImgcprFile(), SEPARATOR),
-                        imageFile.toString(), ng.getDestImage(), SEPARATOR, frameSz, "png");
+                    FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.getImgcprFile(), SEPARATOR),
+                            imageFile.toString(), ng.getDestImage(), SEPARATOR, frameSz, "png");
 
-                setImage(ng.getDestImage());
+                    setImage(ng.getDestImage());
+                    myLogger.info("--------------------------------------\n" + "RESULT");
+                    FileHandler.compareImg(imageFile.toString(), ng.getDestImage());
+                } else if (algorithmType.equals(AlgorithmType.KOHONEN)){
+                    Kohonen k = new Kohonen(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
+                    k.calc();
+
+                    FileHandler.writeMatrixToImage(FileHandler.readPixels(k.getImgcprFile(), SEPARATOR),
+                            imageFile.toString(), k.getDestImage(), SEPARATOR, frameSz, "png");
+
+                    setImage(k.getDestImage());
+                    myLogger.info("--------------------------------------\n" + "RESULT");
+                    FileHandler.compareImg(imageFile.toString(), k.getDestImage());
+                }
                 startBtn.setDisable(false);
-                myLogger.info("--------------------------------------\n" + "RESULT");
-                FileHandler.compareImg(imageFile.toString(), ng.getDestImage());
             }).start();
         });
     }
@@ -111,6 +125,19 @@ public class MainController implements Initializable {
         AlgorithmType[] functionTypes = AlgorithmType.values();
         algorithmComboBox.setItems(FXCollections.observableArrayList(functionTypes));
         algorithmComboBox.setValue(AlgorithmType.NEURAL_GAS);
+        algorithmComboBox.setConverter(new StringConverter<AlgorithmType>() {
+           @Override
+           public String toString(AlgorithmType object) {
+               return object.getName();
+           }
+
+           @Override
+           public AlgorithmType fromString(String string) {
+               return algorithmComboBox.getItems().stream().filter(ap ->
+                       ap.getName().equals(string)).findFirst().orElse(null);
+           }
+        });
+
         algorithmComboBox.valueProperty().addListener(
                 (observable, oldValue, actualValue) -> algorithmType = actualValue);
     }

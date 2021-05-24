@@ -2,7 +2,8 @@ package algorithm;
 
 public enum AlgorithmType {
 
-    NEURAL_GAS("Neural gas");
+    NEURAL_GAS("Neural gas"),
+    KOHONEN("Kohonen");
 
     private String name;
 
