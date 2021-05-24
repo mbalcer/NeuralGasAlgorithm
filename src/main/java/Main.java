@@ -1,29 +1,21 @@
-import alogirthm.NeuralGas;
-import utils.FileHandler;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("view.fxml"));
+        primaryStage.setTitle("Neural Gas Algorithm");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
-        images();
+        launch(args);
     }
 
-    public static void images() {
-        FileHandler.makeEmptyDir("data_img");
-        String imageFile = "images/1.png";
-        String imageData = "data_img/img.data";
-        String sep = "\t";
-        int frameSz = 4;
-        int n = 100;
-        int iter = 100;
-        double mapRadius = 50;
-        double lr = 0.1;
-        double lrc = 1;
-
-        FileHandler.parseIMG(imageFile, imageData, sep, frameSz);
-
-        NeuralGas k = new NeuralGas(n, iter, imageData, sep, false, mapRadius, lr, lrc);
-        k.calc();
-
-        FileHandler.writeMatrixToImage(FileHandler.readPixels(k.destDir + k.imgcprFile, sep),
-                imageFile, k.destDir+"out.png", sep, frameSz, "png");
-    }
 }
