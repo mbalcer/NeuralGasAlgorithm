@@ -2,6 +2,7 @@ package controller;
 
 import algorithm.AlgorithmType;
 import algorithm.Kohonen;
+import algorithm.Neural;
 import algorithm.NeuralGas;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -95,27 +96,20 @@ public class MainController implements Initializable {
             FileHandler.parseIMG(imageFile.toString(), imageData, SEPARATOR, frameSz);
 
             new Thread(() -> {
+                Neural neural = null;
                 if (algorithmType.equals(AlgorithmType.NEURAL_GAS)) {
-                    NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
-                    ng.calc();
-
-                    FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.getImgcprFile(), SEPARATOR),
-                            imageFile.toString(), ng.getDestImage(), SEPARATOR, frameSz, "png");
-
-                    setImage(ng.getDestImage());
-                    myLogger.info("--------------------------------------\n" + "RESULT");
-                    FileHandler.compareImg(imageFile.toString(), ng.getDestImage());
+                    neural = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
                 } else if (algorithmType.equals(AlgorithmType.KOHONEN)){
-                    Kohonen k = new Kohonen(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
-                    k.calc();
-
-                    FileHandler.writeMatrixToImage(FileHandler.readPixels(k.getImgcprFile(), SEPARATOR),
-                            imageFile.toString(), k.getDestImage(), SEPARATOR, frameSz, "png");
-
-                    setImage(k.getDestImage());
-                    myLogger.info("--------------------------------------\n" + "RESULT");
-                    FileHandler.compareImg(imageFile.toString(), k.getDestImage());
+                    neural = new Kohonen(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
                 }
+                neural.calc();
+
+                FileHandler.writeMatrixToImage(FileHandler.readPixels(neural.getImgcprFile(), SEPARATOR),
+                        imageFile.toString(), neural.getDestImage(), SEPARATOR, frameSz, "png");
+
+                setImage(neural.getDestImage());
+                myLogger.info("--------------------------------------\n" + "RESULT");
+                FileHandler.compareImg(imageFile.toString(), neural.getDestImage());
                 startBtn.setDisable(false);
             }).start();
         });

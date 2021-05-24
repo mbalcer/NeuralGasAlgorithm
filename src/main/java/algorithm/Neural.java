@@ -1,5 +1,6 @@
 package algorithm;
 
+import lombok.Getter;
 import utils.DataMath;
 import utils.FileHandler;
 import utils.Metric;
@@ -25,6 +26,15 @@ public abstract class Neural {
 	int dimensions;
 	String srcFilePath;
 	String separator;
+
+	@Getter
+	String destDir;
+	@Getter
+	String destImage;
+	@Getter
+	String destFile;
+	@Getter
+	String imgcprFile;
 
 	public Neural(int neuronsNum, int iterations, String srcFilePath, String separator, boolean normalize) {
 		this.data = FileHandler.readData(srcFilePath, separator);
