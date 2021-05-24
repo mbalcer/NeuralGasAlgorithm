@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -241,6 +242,8 @@ public final class FileHandler {
 	}
 
 	public static void compareImg(String imgS1, String imgS2) {
+		MyLogger logger = MyLogger.getInstance();
+		logger.info("Compare images: " + imgS1 + ", " + imgS2);
 		BufferedImage img1 = null;
 		BufferedImage img2 = null;
 		try {
@@ -254,7 +257,7 @@ public final class FileHandler {
 		int height1 = img1.getHeight(null);
 		int height2 = img2.getHeight(null);
 		if ((width1 != width2) || (height1 != height2)) {
-			System.err.println("Error: Images dimensions mismatch");
+			logger.info("Error: Images dimensions mismatch");
 			System.exit(1);
 		}
 		long diff = 0;
@@ -275,6 +278,7 @@ public final class FileHandler {
 		}
 		double n = width1 * height1 * 3;
 		double p = diff / n / 255.0;
-		System.out.println("diff percent: " + (p * 100.0));
+		DecimalFormat f = new DecimalFormat("##.0000");
+		logger.info("Diff: " + f.format(p * 100.0) + "%");
 	}
 }

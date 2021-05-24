@@ -1,5 +1,6 @@
 package algorithm;
 
+import lombok.Getter;
 import utils.FileHandler;
 import utils.Metric;
 import utils.MyLogger;
@@ -9,17 +10,18 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
+@Getter
 public class NeuralGas extends Neural {
 
 	private double mapRadiusStart;
 	private double learningRateStart;
 	private double timeConst;
 
-	public final String destDir = "results_ng/";
-	public final String destFile = "ng.data";
-	public final String imgcprFile = "imgcpr.data";
-	public final int rerolls = 10;
-
+	private String destDir = "results_ng/";
+	private String destImage = destDir + "out.png";
+	private String destFile = destDir + "ng.data";
+	private String imgcprFile = destDir + "imgcpr.data";
+	private int rerolls = 10;
 	private MyLogger myLogger;
 
 	public NeuralGas(int neuronsNum, int iterations, String srcFilePath, String separator, boolean normalize,
@@ -75,6 +77,6 @@ public class NeuralGas extends Neural {
 			learn(i);
 		}
 
-		FileHandler.writePointsAsClusters(winnerIds, neurons, destDir + imgcprFile, separator);
+		FileHandler.writePointsAsClusters(winnerIds, neurons,  imgcprFile, separator);
 	}
 }

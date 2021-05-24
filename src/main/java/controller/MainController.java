@@ -96,11 +96,13 @@ public class MainController implements Initializable {
                 NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
                 ng.calc();
 
-                FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.destDir + ng.imgcprFile, SEPARATOR),
-                        imageFile.toString(), ng.destDir+"out.png", SEPARATOR, frameSz, "png");
+                FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.getImgcprFile(), SEPARATOR),
+                        imageFile.toString(), ng.getDestImage(), SEPARATOR, frameSz, "png");
 
-                setImage(ng.destDir + "out.png");
+                setImage(ng.getDestImage());
                 startBtn.setDisable(false);
+                myLogger.info("--------------------------------------\n" + "RESULT");
+                FileHandler.compareImg(imageFile.toString(), ng.getDestImage());
             }).start();
         });
     }
@@ -115,7 +117,6 @@ public class MainController implements Initializable {
 
     private void initImageComboBox() {
         String imagesPath = "images/";
-        Path path = Paths.get(imagesPath);
         List<Path> imagesList = null;
         try {
             imagesList = Files.list(Paths.get(imagesPath)).collect(Collectors.toList());
