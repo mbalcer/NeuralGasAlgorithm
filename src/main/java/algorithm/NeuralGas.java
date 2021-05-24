@@ -1,4 +1,4 @@
-package alogirthm;
+package algorithm;
 
 import utils.FileHandler;
 import utils.Metric;

@@ -1,42 +1,122 @@
 package controller;
 
-import alogirthm.NeuralGas;
+import algorithm.AlgorithmType;
+import algorithm.NeuralGas;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import utils.FileHandler;
+
+import java.io.File;
 
 public class MainController {
     @FXML
     private Button startBtn;
 
+    @FXML
+    private ComboBox algorithmComboBox;
+
+    @FXML
+    private Slider neuronsSlider;
+
+    @FXML
+    private Slider iterationSlider;
+
+    @FXML
+    private Slider learningRateSlider;
+
+    @FXML
+    private Slider mapRadiusSlider;
+
+    @FXML
+    private Label neuronsLabel;
+
+    @FXML
+    private Label iterationLabel;
+
+    @FXML
+    private Label learningRateLabel;
+
+    @FXML
+    private Label mapRadiusLabel;
+
+    @FXML
+    private TextArea logsArea;
+
+    @FXML
+    private ImageView imageView;
+
+    private AlgorithmType algorithmType = AlgorithmType.NEURAL_GAS;
+    private int neurons = 5;
+    private int iterations = 100;
+    private double learningRate = 0.1;
+    private double mapRadius = 50.0;
+    private static final double PRECISION = 100.0;
+    private static final String SEPARATOR = "\t";
+
+
     public void initialize() {
-        setStartBtn();
+        initAlgorithmCombobox();
+        initSliders();
+        initButtons();
     }
 
-    public void setStartBtn() {
+    public void initButtons() {
         startBtn.setOnAction(action -> {
-            images();
+            FileHandler.makeEmptyDir("data_img");
+            String imageFile = "images/1.png";
+            String imageData = "data_img/img.data";
+            int frameSz = 4;
+            double lrc = 1;
+
+            FileHandler.parseIMG(imageFile, imageData, SEPARATOR, frameSz);
+
+            NeuralGas ng = new NeuralGas(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
+            ng.calc();
+
+            FileHandler.writeMatrixToImage(FileHandler.readPixels(ng.destDir + ng.imgcprFile, SEPARATOR),
+                    imageFile, ng.destDir+"out.png", SEPARATOR, frameSz, "png");
+
+            setImage(ng.destDir + "out.png");
         });
     }
 
-    public static void images() {
-        FileHandler.makeEmptyDir("data_img");
-        String imageFile = "images/1.png";
-        String imageData = "data_img/img.data";
-        String sep = "\t";
-        int frameSz = 4;
-        int n = 30;
-        int iter = 25;
-        double mapRadius = 50;
-        double lr = 0.1;
-        double lrc = 1;
+    private void initAlgorithmCombobox() {
+        AlgorithmType[] functionTypes = AlgorithmType.values();
+        algorithmComboBox.setItems(FXCollections.observableArrayList(functionTypes));
+        algorithmComboBox.setValue(AlgorithmType.NEURAL_GAS);
+        algorithmComboBox.valueProperty().addListener(
+                (observable, oldValue, actualValue) -> algorithmType = (AlgorithmType) actualValue);
+    }
 
-        FileHandler.parseIMG(imageFile, imageData, sep, frameSz);
+    private void initSliders() {
+        neuronsSlider.valueProperty().addListener((observable, oldValue, actualValue) -> {
+            int value = actualValue.intValue();
+            neurons = value;
+            neuronsLabel.setText(String.valueOf(value));
+        });
+        iterationSlider.valueProperty().addListener((observable, oldValue, actualValue) -> {
+            int value = actualValue.intValue();
+            iterations = value;
+            iterationLabel.setText(String.valueOf(value));
+        });
+        mapRadiusSlider.valueProperty().addListener((observable, oldValue, actualValue) -> {
+            double value = Math.round(actualValue.doubleValue() * PRECISION) / PRECISION;
+            mapRadius = value;
+            mapRadiusLabel.setText(String.valueOf(value));
+        });
+        learningRateSlider.valueProperty().addListener((observable, oldValue, actualValue) -> {
+            double value = Math.round(actualValue.doubleValue() * PRECISION) / PRECISION;
+            learningRate = value;
+            learningRateLabel.setText(String.valueOf(value));
+        });
+    }
 
-        NeuralGas k = new NeuralGas(n, iter, imageData, sep, false, mapRadius, lr, lrc);
-        k.calc();
-
-        FileHandler.writeMatrixToImage(FileHandler.readPixels(k.destDir + k.imgcprFile, sep),
-                imageFile, k.destDir+"out.png", sep, frameSz, "png");
+    private void setImage(String path) {
+        File file = new File(path);
+        Image image = new Image(file.toURI().toString());
+        imageView.setImage(image);
     }
 }
