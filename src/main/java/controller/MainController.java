@@ -87,6 +87,13 @@ public class MainController implements Initializable {
     public void initButtons() {
         startBtn.setDisable(true);
         startBtn.setOnAction(action -> {
+            myLogger.info("--------------------------------------\nSTART PROGRAM\n--------------------------------------");
+            myLogger.info("Algorithm: " + algorithmType.getName());
+            myLogger.info("Image: " + imageFile.toString());
+            myLogger.info("Neurons: " + neurons);
+            myLogger.info("Iterations: " + iterations);
+            myLogger.info("Start map radius: " + mapRadius);
+            myLogger.info("Start learning rate: " + learningRate);
             startBtn.setDisable(true);
             FileHandler.makeEmptyDir("data_img");
             String imageData = "data_img/img.data";

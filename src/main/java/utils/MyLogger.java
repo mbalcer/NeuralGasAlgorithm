@@ -22,7 +22,7 @@ public class MyLogger {
     public void info(String message) {
         System.out.println(message);
         if (textArea != null) {
-            new Thread(() -> Platform.runLater(() -> textArea.appendText(message + "\n"))).start();
+            Platform.runLater(() -> textArea.appendText(message + "\n"));
         }
     }
 }

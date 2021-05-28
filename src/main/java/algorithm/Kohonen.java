@@ -4,6 +4,7 @@ import lombok.Getter;
 import utils.FileHandler;
 import utils.Metric;
 import utils.MyLogger;
+import utils.Utils;
 
 import java.util.List;
 import java.util.Random;
@@ -48,6 +49,9 @@ public class Kohonen extends Neural {
 
 		List<Double> point = data.get(pointIndex);
 		List<Double> nearestNeuron = neurons.get(winnerIds.get(pointIndex));
+
+		myLogger.info("Neuron " + winnerIds.get(pointIndex) + " is winner." + "\n"
+				+ "Weights of neuron winner: \n" + Utils.formatList(nearestNeuron));
 
 		mapRadius = mapRadiusStart * Math.exp(-(double) epoch / timeConst);
 		learningRate = learningRateStart * Math.exp(-(double) epoch / iterations);

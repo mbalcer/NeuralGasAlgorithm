@@ -4,6 +4,7 @@ import lombok.Getter;
 import utils.FileHandler;
 import utils.Metric;
 import utils.MyLogger;
+import utils.Utils;
 
 import java.util.List;
 import java.util.Map;
@@ -49,9 +50,12 @@ public class NeuralGas extends Neural {
 		List<Double> point = data.get(pointIndex);
 		List<Double> nearestNeuron = neurons.get(winnerIds.get(pointIndex));
 
+		myLogger.info("Neuron " + winnerIds.get(pointIndex) + " is winner." + "\n"
+				+ "Weights of neuron winner: \n" + Utils.formatList(nearestNeuron));
+
 		mapRadius = mapRadiusStart * Math.exp(-(double) epoch / timeConst);
 		learningRate = learningRateStart * Math.exp(-(double) epoch / iterations);
-		myLogger.info("Map radius: " + mapRadius + "\t" + "Learning rate: " + learningRate);
+		myLogger.info("Map radius: " + mapRadius + "\n" + "Learning rate: " + learningRate);
 
 		Map<Double, List<Double>> map = new TreeMap<Double, List<Double>>();
 		for (int i = 0; i < neurons.size(); i++) {

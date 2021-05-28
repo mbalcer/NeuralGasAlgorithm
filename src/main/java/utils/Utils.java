@@ -3,6 +3,8 @@ package utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class Utils {
 
@@ -46,6 +48,17 @@ public final class Utils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String formatList(List<Double> list) {
+		int pageSize = 8;
+		return IntStream.range(0, (list.size() + pageSize - 1) / pageSize)
+				.mapToObj(i -> list.subList(i * pageSize, (i + 1) * pageSize - 1))
+				.map(l -> l.stream()
+						.map(item -> DataMath.approximation(item, 2))
+						.map(item -> item.toString())
+						.collect(Collectors.joining(";")))
+				.collect(Collectors.joining("\n"));
 	}
 
 }

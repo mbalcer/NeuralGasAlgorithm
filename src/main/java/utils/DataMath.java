@@ -95,4 +95,8 @@ public final class DataMath {
 		return centralMoment / Math.pow(standardDeviation(list), 4) - 3;
 	}
 
+	public static Double approximation(Double value, int decimalPlace) {
+		return Math.ceil(value * (Math.pow(10, decimalPlace))) / (Math.pow(10, decimalPlace));
+	}
+
 }
