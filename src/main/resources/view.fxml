@@ -11,9 +11,9 @@
     <Slider fx:id="iterationSlider" layoutX="417.0" layoutY="118.0" majorTickUnit="200.0" max="1000.0" minorTickCount="4" prefHeight="40.0" prefWidth="700.0" showTickLabels="true" showTickMarks="true" value="100.0" />
     <Slider fx:id="learningRateSlider" layoutX="420.0" layoutY="205.0" majorTickUnit="0.5" max="2.0" minorTickCount="1" prefHeight="40.0" prefWidth="320.0" showTickLabels="true" showTickMarks="true" value="0.1" />
     <Slider fx:id="mapRadiusSlider" layoutX="799.0" layoutY="204.0" majorTickUnit="10.0" minorTickCount="1" prefHeight="40.0" prefWidth="320.0" showTickLabels="true" showTickMarks="true" value="50.0" />
-    <Label layoutX="420.0" layoutY="94.0" prefHeight="17.0" prefWidth="152.0" text="Iteration" />
-    <Label layoutX="425.0" layoutY="180.0" prefHeight="17.0" prefWidth="130.0" text="Start learning rate" />
-    <Label layoutX="804.0" layoutY="180.0" prefHeight="17.0" prefWidth="113.0" text="Start map radius" />
+    <Label layoutX="420.0" layoutY="94.0" prefHeight="17.0" prefWidth="152.0" text="Epochs:" />
+    <Label layoutX="425.0" layoutY="180.0" prefHeight="17.0" prefWidth="130.0" text="Start learning rate:" />
+    <Label layoutX="804.0" layoutY="180.0" prefHeight="17.0" prefWidth="113.0" text="Start map radius:" />
     <Label fx:id="neuronsLabel" layoutX="550.0" layoutY="14.0" prefHeight="17.0" prefWidth="44.0" text="5" />
     <Label fx:id="iterationLabel" layoutX="550.0" layoutY="94.0" prefHeight="17.0" prefWidth="44.0" text="100" />
     <Label fx:id="learningRateLabel" layoutX="554.0" layoutY="180.0" prefHeight="17.0" prefWidth="74.0" text="0.1" />

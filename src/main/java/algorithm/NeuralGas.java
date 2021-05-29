@@ -77,7 +77,7 @@ public class NeuralGas extends Neural {
 
 	public void calc(boolean liveUpdate) {
 		for (int i = 0; i < iterations; i++) {
-			myLogger.info("--------------------------------------\n" + "Iteration: " + (i+1));
+			myLogger.info("--------------------------------------\n" + "Epoch: " + (i+1));
 			calcWinnersIds();
 			learn(i);
 

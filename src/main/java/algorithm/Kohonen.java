@@ -60,7 +60,7 @@ public class Kohonen extends Neural {
 		if (mapRadius < minRadius) {
 			mapRadius = minRadius;
 		}
-		myLogger.info("Map radius: " + mapRadius + "\t" + "Learning rate: " + learningRate);
+		myLogger.info("Map radius: " + mapRadius + "\n" + "Learning rate: " + learningRate);
 
 		for (int i = 0; i < neurons.size(); i++) {
 			distFromBMU = Metric.euclidean(nearestNeuron, neurons.get(i));
@@ -75,7 +75,7 @@ public class Kohonen extends Neural {
 
 	public void calc(boolean liveUpdate) {
 		for (int i = 0; i < iterations; i++) {
-			myLogger.info("--------------------------------------\n" + "Iteration: " + (i+1));
+			myLogger.info("--------------------------------------\n" + "Epoch: " + (i+1));
 			calcWinnersIds();
 			learn(i);
 
