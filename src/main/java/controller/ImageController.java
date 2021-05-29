@@ -65,4 +65,8 @@ public class ImageController {
         FileHandler.writeMatrixToImage(FileHandler.readPixels(neural.getImgcprFile(), neural.getSeparator()),
                 srcFile, neural.getDestImage(), neural.getSeparator(), frameSz, format);
     }
+
+    public void clearImage() {
+        imageView.setImage(null);
+    }
 }

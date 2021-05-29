@@ -99,6 +99,11 @@ public class MainController implements Initializable {
     public void initStartBtn() {
         startBtn.setDisable(true);
         startBtn.setOnAction(action -> {
+            startBtn.setDisable(true);
+            openLogsBtn.setDisable(true);
+            imageController.clearImage();
+            myLogger.clearLogger();
+
             myLogger.info("--------------------------------------\nSTART PROGRAM\n--------------------------------------");
             myLogger.info("Algorithm: " + algorithmType.getName());
             myLogger.info("Image: " + imageFile.toString());
@@ -106,8 +111,6 @@ public class MainController implements Initializable {
             myLogger.info("Iterations: " + iterations);
             myLogger.info("Start map radius: " + mapRadius);
             myLogger.info("Start learning rate: " + learningRate);
-            startBtn.setDisable(true);
-            openLogsBtn.setDisable(true);
             boolean liveUpdate = liveUpdateCheckBox.isSelected();
             imageController.srcFile(imageFile.toString());
             FileHandler.makeEmptyDir("data_img");

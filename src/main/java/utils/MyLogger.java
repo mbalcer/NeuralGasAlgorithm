@@ -74,4 +74,11 @@ public class MyLogger {
             e.printStackTrace();
         }
     }
+
+    public void clearLogger() {
+        lines = new ArrayList<>();
+        if (textArea != null) {
+            Platform.runLater(() -> textArea.clear());
+        }
+    }
 }
