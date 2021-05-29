@@ -30,6 +30,9 @@ public class MainController implements Initializable {
     private Button startBtn;
 
     @FXML
+    private Button openLogsBtn;
+
+    @FXML
     private ComboBox<AlgorithmType> algorithmComboBox;
 
     @FXML
@@ -89,10 +92,11 @@ public class MainController implements Initializable {
         initAlgorithmCombobox();
         initImageComboBox();
         initSliders();
-        initButtons();
+        initStartBtn();
+        initOpenLogsBtn();
     }
 
-    public void initButtons() {
+    public void initStartBtn() {
         startBtn.setDisable(true);
         startBtn.setOnAction(action -> {
             myLogger.info("--------------------------------------\nSTART PROGRAM\n--------------------------------------");
@@ -103,6 +107,7 @@ public class MainController implements Initializable {
             myLogger.info("Start map radius: " + mapRadius);
             myLogger.info("Start learning rate: " + learningRate);
             startBtn.setDisable(true);
+            openLogsBtn.setDisable(true);
             boolean liveUpdate = liveUpdateCheckBox.isSelected();
             imageController.srcFile(imageFile.toString());
             FileHandler.makeEmptyDir("data_img");
@@ -127,8 +132,15 @@ public class MainController implements Initializable {
                 myLogger.info("--------------------------------------\n" + "RESULT");
                 FileHandler.compareImg(imageFile.toString(), neural.getDestImage());
                 startBtn.setDisable(false);
+                openLogsBtn.setDisable(false);
                 myLogger.saveLogsToFile(algorithmType);
             }).start();
+        });
+    }
+
+    private void initOpenLogsBtn() {
+        openLogsBtn.setOnAction(action -> {
+            myLogger.openLogsFile();
         });
     }
 
