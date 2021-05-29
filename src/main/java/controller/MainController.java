@@ -65,6 +65,9 @@ public class MainController implements Initializable {
     @FXML
     private ImageView imageView;
 
+    @FXML
+    private CheckBox liveUpdateCheckBox;
+
     private AlgorithmType algorithmType = AlgorithmType.NEURAL_GAS;
     private int neurons = 5;
     private int iterations = 100;
@@ -74,10 +77,15 @@ public class MainController implements Initializable {
     private static final double PRECISION = 100.0;
     private static final String SEPARATOR = "\t";
     private MyLogger myLogger;
+    private ImageController imageController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         myLogger = MyLogger.getInstance().textArea(logsArea);
+        imageController = ImageController.getInstance()
+                .imageView(imageView)
+                .frameSz(4)
+                .format("png");
         initAlgorithmCombobox();
         initImageComboBox();
         initSliders();
@@ -95,12 +103,13 @@ public class MainController implements Initializable {
             myLogger.info("Start map radius: " + mapRadius);
             myLogger.info("Start learning rate: " + learningRate);
             startBtn.setDisable(true);
+            boolean liveUpdate = liveUpdateCheckBox.isSelected();
+            imageController.srcFile(imageFile.toString());
             FileHandler.makeEmptyDir("data_img");
             String imageData = "data_img/img.data";
-            int frameSz = 4;
             double lrc = 1;
 
-            FileHandler.parseIMG(imageFile.toString(), imageData, SEPARATOR, frameSz);
+            FileHandler.parseIMG(imageFile.toString(), imageData, SEPARATOR, imageController.getFrameSz());
 
             new Thread(() -> {
                 Neural neural = null;
@@ -109,15 +118,16 @@ public class MainController implements Initializable {
                 } else if (algorithmType.equals(AlgorithmType.KOHONEN)){
                     neural = new Kohonen(neurons, iterations, imageData, SEPARATOR, false, mapRadius, learningRate, lrc);
                 }
-                neural.calc();
+                neural.calc(liveUpdate);
 
-                FileHandler.writeMatrixToImage(FileHandler.readPixels(neural.getImgcprFile(), SEPARATOR),
-                        imageFile.toString(), neural.getDestImage(), SEPARATOR, frameSz, "png");
+                if (!liveUpdate) {
+                    imageController.neural(neural).setImage();
+                }
 
-                setImage(neural.getDestImage());
                 myLogger.info("--------------------------------------\n" + "RESULT");
                 FileHandler.compareImg(imageFile.toString(), neural.getDestImage());
                 startBtn.setDisable(false);
+                myLogger.saveLogsToFile(algorithmType);
             }).start();
         });
     }
@@ -156,7 +166,6 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             imageComboBox.setItems(FXCollections.observableArrayList(new ArrayList()));
         }
-
     }
 
     private void initSliders() {

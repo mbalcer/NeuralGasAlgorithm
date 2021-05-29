@@ -13,6 +13,7 @@ import java.util.Random;
 /**
  * Abstract class for neural network algorithms.
  */
+@Getter
 public abstract class Neural {
 	// dataset with neurons weights
 	List<List<Double>> neurons;
@@ -27,13 +28,9 @@ public abstract class Neural {
 	String srcFilePath;
 	String separator;
 
-	@Getter
 	String destDir;
-	@Getter
 	String destImage;
-	@Getter
 	String destFile;
-	@Getter
 	String imgcprFile;
 
 	public Neural(int neuronsNum, int iterations, String srcFilePath, String separator, boolean normalize) {
@@ -148,5 +145,5 @@ public abstract class Neural {
 	/**
 	 * Calculate results loop.
 	 */
-	public abstract void calc();
+	public abstract void calc(boolean liveUpdate);
 }

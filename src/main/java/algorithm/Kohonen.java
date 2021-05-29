@@ -1,5 +1,6 @@
 package algorithm;
 
+import controller.ImageController;
 import lombok.Getter;
 import utils.FileHandler;
 import utils.Metric;
@@ -72,13 +73,15 @@ public class Kohonen extends Neural {
 		}
 	}
 
-	public void calc() {
+	public void calc(boolean liveUpdate) {
 		for (int i = 0; i < iterations; i++) {
 			myLogger.info("--------------------------------------\n" + "Iteration: " + (i+1));
 			calcWinnersIds();
 			learn(i);
-		}
 
-		FileHandler.writePointsAsClusters(winnerIds, neurons, imgcprFile, separator);
+			if (liveUpdate) {
+				ImageController.getInstance().neural(this).setImage();
+			}
+		}
 	}
 }
