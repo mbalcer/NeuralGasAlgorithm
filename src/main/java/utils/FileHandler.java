@@ -241,7 +241,7 @@ public final class FileHandler {
 		}
 	}
 
-	public static void compareImg(String imgS1, String imgS2) {
+	public static double compareImg(String imgS1, String imgS2) {
 		MyLogger logger = MyLogger.getInstance();
 		logger.info("Compare images: " + imgS1 + ", " + imgS2);
 		BufferedImage img1 = null;
@@ -280,5 +280,6 @@ public final class FileHandler {
 		double p = diff / n / 255.0;
 		DecimalFormat f = new DecimalFormat("##.0000");
 		logger.info("Diff: " + f.format(p * 100.0) + "%");
+		return p * 100;
 	}
 }
